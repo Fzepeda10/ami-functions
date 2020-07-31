@@ -1,14 +1,27 @@
 {
   "name": "ami-functions",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Asterisk Manager Functions",
   "main": "lib/index.js",
   "types": "lib",
   "scripts": {
     "build": "tsc -p ."
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Fzepeda10/ami-functions.git"
+  },
+  "keywords": [
+    "AMI",
+    "Asterisk",
+    "PBX"
+  ],
   "author": "Fernando E. Zepeda Castellanos",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Fzepeda10/ami-functions/issues"
+  },
+  "homepage": "https://github.com/Fzepeda10/ami-functions#readme",
   "devDependencies": {
     "typescript": "^3.9.7"
   },
