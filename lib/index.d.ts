@@ -22,9 +22,13 @@ export declare type AMI = {
  * @param {string} status Estatus de la extension.
  */
 export declare type PBXExtension = {
-    type: string;
-    extension: string;
-    status: string;
+    response: string;
+    data: {
+        error: any;
+        type: string;
+        extension: string;
+        status: string;
+    };
 };
 /**
  * Originar llamada para iniciar session en la cola de llamadas.
@@ -104,10 +108,7 @@ export declare function queueRemove(CONN: AMI, AGENT: string, EXT: string, QUEUE
  * @param {string} EXT Extension registrada en el PBX.
  * @return {PBXExtension} pbx_extension.
  */
-export declare function extensionState(CONN: AMI, AGENT: string, EXT: string): Promise<PBXExtension | {
-    response: string;
-    data: any;
-}>;
+export declare function extensionState(CONN: AMI, AGENT: string, EXT: string): Promise<PBXExtension>;
 /**
  * Generar un log en queuelog de Asterisk PBX.
  * @async

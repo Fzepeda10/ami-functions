@@ -27,9 +27,14 @@ export type AMI = {
  * @param {string} status Estatus de la extension.
  */
 export type PBXExtension = {
-    type: string,
-    extension: string,
-    status: string
+    response:string
+    data:{
+        error:any,
+        type: string,
+        extension: string,
+        status: string
+    }
+
 }
 /**
  * Originar llamada para iniciar session en la cola de llamadas.
@@ -160,21 +165,24 @@ export async function queueRemove(CONN: AMI, AGENT: string, EXT: string, QUEUE: 
  * @param {string} EXT Extension registrada en el PBX.
  * @return {PBXExtension} pbx_extension.
  */
-export async function extensionState(CONN: AMI, AGENT: string, EXT: string) {
+export async function extensionState(CONN: AMI, AGENT: string, EXT: string):Promise<PBXExtension> {
     const manager = require('asterisk-manager')(CONN.port, CONN.host, CONN.user, CONN.password, CONN.event);
     const manager_action = promisify(manager.action);
-    let pbx_extension: PBXExtension = { type: '', extension: '', status: '' };
+    let pbx_extension: PBXExtension = { response:'', data:{error: '', type: '', extension: '', status: ''}};
     try {
         const manager_result = await manager_action({ 'Action': 'ExtensionState', 'Exten': EXT })
         let type = manager_result.hint.split("/");
-        pbx_extension.type = type[0];
-        pbx_extension.extension = manager_result.exten;
-        pbx_extension.status = manager_result.statustext;
+        pbx_extension.response="Success";
+        pbx_extension.data.type = type[0];
+        pbx_extension.data.extension = manager_result.exten;
+        pbx_extension.data.status = manager_result.statustext;
         manager.disconnect();
         return pbx_extension;
     } catch (e) {
+        pbx_extension.response="Error";
+        pbx_extension.data.error=e;
         manager.disconnect();
-        return { response: "error", data: e };
+        return pbx_extension;
     }
 
 }
@@ -282,6 +290,40 @@ export async function BDGet(CONN: AMI, FAMILY: string, KEY: string, VALUE: strin
         });
         manager.disconnect();
         return manager_result;
+    } catch (e) {
+        manager.disconnect();
+        return { response: "error", data: e };
+    }
+}
+/**
+ * Originar llamada Click To Call.
+ * @param {AMI} CONN Objeto con parametros de conexion AMI.
+ * @param {string} AGENT Agente telefonico.
+ * @param {string} EXT Extension registrada en el PBX.
+ * @param {string} TYPE Tipo de tecnologia (SIP,IAX2,Etc.).
+ * @param {string} NUM Numero de 10 digitos a marcar.
+ * @returns Respuesta de la ejecucion AMI.
+ */
+export function originateClicToCall(CONN: AMI, AGENT:string, EXT:string, PREFIX:string,NUM:string) {
+    const manager = require('asterisk-manager')(CONN.port, CONN.host, CONN.user, CONN.password, CONN.event);
+    try {
+        manager.action({
+            'Action': 'Originate',
+            'Channel': 'Local/$EXT@from-internal',
+            'Exten': `${PREFIX}${NUM}`,
+            'Context': 'from-internal',
+            'Priority': '1',
+            'CallerID': `"SeguritechCC <${NUM}>"`,
+            'Timeout': '8000',
+            'Account': 'Login-API',
+            'Variable': {
+                'AGENT_NAME': AGENT,               
+                'AGENT_EXTEN': EXT
+            }
+        }, function () {
+            manager.disconnect();
+            return { response: "success" };
+        });
     } catch (e) {
         manager.disconnect();
         return { response: "error", data: e };
