@@ -315,7 +315,7 @@ export function originateClicToCall(CONN: AMI, AGENT:string, EXT:string, PREFIX:
             'Priority': '1',
             'CallerID': `"SeguritechCC <${NUM}>"`,
             'Timeout': '8000',
-            'Account': 'Login-API',
+            'Account': 'ClicToCall',
             'Variable': {
                 'AGENT_NAME': AGENT,               
                 'AGENT_EXTEN': EXT
