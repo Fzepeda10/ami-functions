@@ -1,6 +1,6 @@
 {
   "name": "ami-functions",
-  "version": "1.0.8",
+  "version": "1.0.10",
   "description": "Asterisk Manager Functions",
   "main": "lib/index.js",
   "types": "lib",

@@ -158,4 +158,17 @@ export declare function BDDel(CONN: AMI, FAMILY: string, KEY: string, VALUE: str
  * @param {string} VALUE Valor a modificar.
  */
 export declare function BDGet(CONN: AMI, FAMILY: string, KEY: string, VALUE: string): Promise<any>;
+/**
+ * Originar llamada Click To Call.
+ * @param {AMI} CONN Objeto con parametros de conexion AMI.
+ * @param {string} AGENT Agente telefonico.
+ * @param {string} EXT Extension registrada en el PBX.
+ * @param {string} TYPE Tipo de tecnologia (SIP,IAX2,Etc.).
+ * @param {string} NUM Numero de 10 digitos a marcar.
+ * @returns Respuesta de la ejecucion AMI.
+ */
+export declare function originateClicToCall(CONN: AMI, AGENT: string, EXT: string, PREFIX: string, NUM: string): {
+    response: string;
+    data: any;
+} | undefined;
 //# sourceMappingURL=index.d.ts.map

@@ -309,7 +309,7 @@ export function originateClicToCall(CONN: AMI, AGENT:string, EXT:string, PREFIX:
     try {
         manager.action({
             'Action': 'Originate',
-            'Channel': 'Local/$EXT@from-internal',
+            'Channel': `Local/${EXT}@from-internal`,
             'Exten': `${PREFIX}${NUM}`,
             'Context': 'from-internal',
             'Priority': '1',
